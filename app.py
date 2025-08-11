@@ -75,8 +75,8 @@ if symbol:
         # Display metrics
         c1, c2, c3 = st.columns(3)
         c1.metric("Current Price", f"{current_price:.2f}", f"{price_change_pct:.2f}%")
-        c2.metric("High", f"{stock_data['High'].iloc[-1]:.2f}")
-        c3.metric("Low", f"{stock_data['Low'].iloc[-1]:.2f}")
+        c2.metric("High", f"{float(stock_data['High'].iloc[-1]):.2f}")
+        c3.metric("Low", f"{float(stock_data['Low'].iloc[-1]):.2f}")
 
         # Chart
         fig = go.Figure()
