@@ -66,7 +66,7 @@ def calculate_sma(data, window):
 
 rsi_series = calculate_rsi(stock_data['Close']).dropna()
 if not rsi_series.empty:
-    current_rsi = float(rsi_series.iloc[-1])  # scalar value
+    current_rsi = float(rsi_series.iloc[-1])
     if current_rsi < 30:
         rsi_signal = "Oversold"
     elif current_rsi > 70:
@@ -74,6 +74,8 @@ if not rsi_series.empty:
     else:
         rsi_signal = "Neutral"
     indicator_cols[0].metric("RSI (14)", f"{current_rsi:.1f}", rsi_signal)
+else:
+    indicator_cols[0].metric("RSI (14)", "N/A", "Insufficient data")
 
 def main():
     # Header
