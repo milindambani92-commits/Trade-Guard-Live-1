@@ -30,14 +30,17 @@ def get_stock_data(symbol, period="1mo"):
 def get_market_overview():
     """Get basic market data (Global + Indian indices)"""
     indices = {
+        # Global
         'S&P 500': '^GSPC',
-        'NASDAQ': '^IXIC', 
-        'VIX': '^VIX'
+        'NASDAQ': '^IXIC',
+        'VIX': '^VIX',
+
+        # Indian
         'NIFTY 50': '^NSEI',
         'NIFTY BANK': '^NSEBANK',
         'SENSEX': '^BSESN'
     }
-    
+
     results = {}
     for name, ticker in indices.items():
         try:
@@ -45,16 +48,16 @@ def get_market_overview():
             if data is not None and len(data) >= 2:
                 current = data['Close'].iloc[-1]
                 prev = data['Close'].iloc[-2]
-                change_pct = ((current - prev) / prev) * 100
+                change_pct = ((current - prev) / prev) * 100 if prev != 0 else 0
                 results[name] = {
                     'price': current,
                     'change': change_pct
                 }
             else:
                 results[name] = {'price': 0, 'change': 0}
-        except:
+        except Exception:
             results[name] = {'price': 0, 'change': 0}
-    
+
     return results
 
 def calculate_sma(data, window):
