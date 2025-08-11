@@ -45,11 +45,11 @@ cols = st.columns(len(indices))
 for i, (name, ticker) in enumerate(indices.items()):
     data = yf.download(ticker, period="2d", interval="1d", progress=False)
     if len(data) >= 2:
-        current = data['Close'].iloc[-1]
-        prev = data['Close'].iloc[-2]
-        change_pct = ((current - prev) / prev) * 100
-        arrow = "↗" if change_pct >= 0 else "↘"
-        cols[i].metric(name, f"{current:.2f}", f"{arrow} {change_pct:.2f}%")
+    current = float(data['Close'].iloc[-1])
+    prev = float(data['Close'].iloc[-2])
+    change_pct = ((current - prev) / prev) * 100 if prev != 0 else 0
+    arrow = "↗" if change_pct >= 0 else "↘"
+    cols[i].metric(name, f"{current:.2f}", f"{arrow} {change_pct:.2f}%")
 
 # -------------------
 # Global Stock Search
