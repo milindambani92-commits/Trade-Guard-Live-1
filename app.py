@@ -34,6 +34,7 @@ st_autorefresh(interval=60 * 1000, key="refresh")
 # Market Overview
 # -------------------
 st.subheader("📊 Market Overview (Updated Every Minute)")
+
 indices = {
     'S&P 500': '^GSPC',
     'NASDAQ': '^IXIC',
@@ -42,14 +43,21 @@ indices = {
 }
 
 cols = st.columns(len(indices))
+
 for i, (name, ticker) in enumerate(indices.items()):
     data = yf.download(ticker, period="2d", interval="1d", progress=False)
+
     if len(data) >= 2:
-    current = float(data['Close'].iloc[-1])
-    prev = float(data['Close'].iloc[-2])
-    change_pct = ((current - prev) / prev) * 100 if prev != 0 else 0
-    arrow = "↗" if change_pct >= 0 else "↘"
-    cols[i].metric(name, f"{current:.2f}", f"{arrow} {change_pct:.2f}%")
+        try:
+            current = float(data['Close'].iloc[-1])
+            prev = float(data['Close'].iloc[-2])
+            change_pct = ((current - prev) / prev) * 100 if prev != 0 else 0
+            arrow = "↗" if change_pct >= 0 else "↘"
+            cols[i].metric(name, f"{current:.2f}", f"{arrow} {change_pct:.2f}%")
+        except Exception as e:
+            cols[i].metric(name, "N/A", "Error fetching data")
+    else:
+        cols[i].metric(name, "N/A", "No data")
 
 # -------------------
 # Global Stock Search
