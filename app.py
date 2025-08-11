@@ -68,8 +68,8 @@ symbol = st.text_input("Enter Stock Symbol (e.g., RELIANCE.NS, TCS.NS, AAPL, TSL
 if symbol:
     stock_data = yf.download(symbol, period="1d", interval="1m")
     if not stock_data.empty:
-        current_price = stock_data['Close'].iloc[-1]
-        prev_price = stock_data['Close'].iloc[-2] if len(stock_data) > 1 else current_price
+        current_price = float(stock_data['Close'].iloc[-1])
+        prev_price = float(stock_data['Close'].iloc[-2]) if len(stock_data) > 1 else current_price
         price_change_pct = ((current_price - prev_price) / prev_price) * 100 if prev_price != 0 else 0
 
         # Display metrics
