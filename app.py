@@ -30,9 +30,15 @@ def get_stock_data(symbol, period="1mo"):
 def get_market_overview():
     """Get basic market data"""
     indices = {
+        # Global
         'S&P 500': '^GSPC',
         'NASDAQ': '^IXIC', 
         'VIX': '^VIX'
+        
+        # Indian
+        'NIFTY 50': '^NSEI',
+        'NIFTY BANK': '^NSEBANK',
+        'SENSEX': '^BSESN'
     }
     
     results = {}
@@ -58,10 +64,16 @@ def calculate_sma(data, window):
     """Simple moving average"""
     return data.rolling(window=window).mean()
 
-rsi = calculate_rsi(stock_data['Close'])
-if len(rsi.dropna()) > 0:
-    current_rsi = rsi.iloc[-1]
-    rsi_signal = "Oversold" if current_rsi < 30 else "Overbought" if current_rsi > 70 else "Neutral"
+rsi_series = calculate_rsi(stock_data['Close']).dropna()
+if not rsi_series.empty:
+    current_rsi = float(rsi_series.iloc[-1])  # scalar value
+    if current_rsi < 30:
+        rsi_signal = "Oversold"
+    elif current_rsi > 70:
+        rsi_signal = "Overbought"
+    else:
+        rsi_signal = "Neutral"
+    indicator_cols[0].metric("RSI (14)", f"{current_rsi:.1f}", rsi_signal)
 
 def main():
     # Header
