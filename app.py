@@ -28,14 +28,11 @@ def get_stock_data(symbol, period="1mo"):
 
 @st.cache_data(ttl=300)
 def get_market_overview():
-    """Get basic market data"""
+    """Get basic market data (Global + Indian indices)"""
     indices = {
-        # Global
         'S&P 500': '^GSPC',
         'NASDAQ': '^IXIC', 
         'VIX': '^VIX'
-        
-        # Indian
         'NIFTY 50': '^NSEI',
         'NIFTY BANK': '^NSEBANK',
         'SENSEX': '^BSESN'
