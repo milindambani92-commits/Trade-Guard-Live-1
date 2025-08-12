@@ -58,23 +58,16 @@ def get_stock_data(symbol, period="1mo", interval="1d"):
         return None
 
 def find_support_resistance(series_close: pd.Series, window=5):
-    """
-    Very simple support/resistance detection:
-    - Look for local minima/maxima with rolling window.
-    Returns lists of support levels (recent minima) and resistance (recent maxima).
-    """
     supports = []
     resistances = []
-    s = series_close
-    # find local extremes
+    s = series_close.dropna()  # ensure no NaN
     for i in range(window, len(s) - window):
         chunk = s.iloc[i - window:i + window + 1]
-        center = s.iloc[i]
-        if center == chunk.max():
+        center = float(s.iloc[i])
+        if center == float(chunk.max()):
             resistances.append(center)
-        if center == chunk.min():
+        if center == float(chunk.min()):
             supports.append(center)
-    # dedupe and keep recent few
     supports = sorted(list(set(supports)))[-3:]
     resistances = sorted(list(set(resistances)))[-3:]
     return supports, resistances
