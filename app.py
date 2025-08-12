@@ -194,8 +194,8 @@ with chart_col1:
 
     # Plot intraday (if available)
     if intraday_toggle and stock_intraday is not None and not stock_intraday.empty:
-    st.write("Intraday data points:", len(stock_intraday))
-    df = stock_intraday.copy()
+        st.write("Intraday data points:", len(stock_intraday))
+        df = stock_intraday.copy()
     fig = go.Figure()
     fig.add_trace(go.Candlestick(
         x=df.index,
