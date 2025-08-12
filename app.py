@@ -207,10 +207,10 @@ with chart_col1:
     ))
     if "SMA20" in indicator_toggle and len(df) >= 20:
         fig.add_trace(go.Scatter(x=df.index, y=calculate_sma(df['Close'], 20), name="SMA20"))
-    fig.update_layout(height=500, margin=dict(l=10, r=10, t=40, b=10))
-    st.plotly_chart(fig, use_container_width=True)
-else:
-    st.warning("No intraday data available for chart.")
+        fig.update_layout(height=500, margin=dict(l=10, r=10, t=40, b=10))
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.warning("No intraday data available for chart.")
 
 if stock_hist is not None and not stock_hist.empty:
     st.write("Historical data points:", len(stock_hist))
