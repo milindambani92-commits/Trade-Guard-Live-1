@@ -194,46 +194,40 @@ with chart_col1:
 
     # Plot intraday (if available)
     if intraday_toggle and stock_intraday is not None and not stock_intraday.empty:
-        df = stock_intraday.copy()
-        # prepare fig
-        fig = go.Figure()
-        fig.add_trace(go.Candlestick(
-            x=df.index,
-            open=df['Open'],
-            high=df['High'],
-            low=df['Low'],
-            close=df['Close'],
-            name="Intraday"
-        ))
-        # indicators
-        if "SMA20" in indicator_toggle and len(df)>=20:
-            fig.add_trace(go.Scatter(x=df.index, y=calculate_sma(df['Close'],20), name="SMA20", line=dict(width=1)))
-        if "SMA50" in indicator_toggle and len(df)>=50:
-            fig.add_trace(go.Scatter(x=df.index, y=calculate_sma(df['Close'],50), name="SMA50", line=dict(width=1)))
-        if "Bollinger" in indicator_toggle and len(df)>=20:
-            upper, lower = calculate_bollinger(df['Close'], 20)
-            fig.add_trace(go.Scatter(x=df.index, y=upper, name="BollingerUpper", line=dict(width=1), opacity=0.5))
-            fig.add_trace(go.Scatter(x=df.index, y=lower, name="BollingerLower", line=dict(width=1), opacity=0.5))
+    st.write("Intraday data points:", len(stock_intraday))
+    df = stock_intraday.copy()
+    fig = go.Figure()
+    fig.add_trace(go.Candlestick(
+        x=df.index,
+        open=df['Open'],
+        high=df['High'],
+        low=df['Low'],
+        close=df['Close'],
+        name="Intraday"
+    ))
+    if "SMA20" in indicator_toggle and len(df) >= 20:
+        fig.add_trace(go.Scatter(x=df.index, y=calculate_sma(df['Close'], 20), name="SMA20"))
+    fig.update_layout(height=500, margin=dict(l=10, r=10, t=40, b=10))
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.warning("No intraday data available for chart.")
 
-        fig.update_layout(title=f"{symbol} Intraday (1-min)", height=500, xaxis_title="Time", yaxis_title="Price")
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.info("Intraday 1-min chart not available or disabled.")
-
-    # Full historical chart
-    if stock_hist is not None and not stock_hist.empty:
-        dfh = stock_hist.copy()
-        fig2 = go.Figure()
-        fig2.add_trace(go.Candlestick(
-            x=dfh.index,
-            open=dfh['Open'], high=dfh['High'], low=dfh['Low'], close=dfh['Close'], name="Historical"
-        ))
-        if "SMA20" in indicator_toggle and len(dfh)>=20:
-            fig2.add_trace(go.Scatter(x=dfh.index, y=calculate_sma(dfh['Close'],20), name="SMA20", line=dict(width=1)))
-        if "SMA50" in indicator_toggle and len(dfh)>=50:
-            fig2.add_trace(go.Scatter(x=dfh.index, y=calculate_sma(dfh['Close'],50), name="SMA50", line=dict(width=1)))
-        fig2.update_layout(title=f"{symbol} Historical ({hist_period})", height=450, xaxis_title="Date", yaxis_title="Price")
-        st.plotly_chart(fig2, use_container_width=True)
+if stock_hist is not None and not stock_hist.empty:
+    st.write("Historical data points:", len(stock_hist))
+    dfh = stock_hist.copy()
+    fig2 = go.Figure()
+    fig2.add_trace(go.Candlestick(
+        x=dfh.index,
+        open=dfh['Open'],
+        high=dfh['High'],
+        low=dfh['Low'],
+        close=dfh['Close'],
+        name="Historical"
+    ))
+    fig2.update_layout(height=500, margin=dict(l=10, r=10, t=40, b=10))
+    st.plotly_chart(fig2, use_container_width=True)
+else:
+    st.warning("No historical data available for chart.")
 
 with chart_col2:
     st.subheader("Indicators & Levels")
